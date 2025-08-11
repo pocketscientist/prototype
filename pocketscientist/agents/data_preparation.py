@@ -9,11 +9,12 @@ from .base import BaseAgent, AgentState
 class DataPreparationAgent(BaseAgent):
     """Agent responsible for data cleaning, transformation, and feature engineering."""
     
-    def __init__(self, llm_provider):
+    def __init__(self, llm_provider, executor=None):
         super().__init__(
             name="Data Preparation Specialist",
             llm_provider=llm_provider, 
-            phase_name="clean, transform, and prepare data for analysis"
+            phase_name="clean, transform, and prepare data for analysis",
+            executor=executor
         )
     
     def execute(self, state: AgentState) -> Dict[str, Any]:
@@ -43,7 +44,8 @@ class DataPreparationAgent(BaseAgent):
 4. Fix data type inconsistencies
 5. Standardize categorical values
 
-Explain your decisions and show before/after comparisons."""
+Explain your decisions and show before/after comparisons.""",
+                    state
                 )
                 notebook_cells.append(cleaning_cell)
             
@@ -57,7 +59,8 @@ Explain your decisions and show before/after comparisons."""
 4. Apply any necessary scaling or normalization
 5. Transform skewed distributions if needed
 
-Choose appropriate methods based on the data and analysis goals."""
+Choose appropriate methods based on the data and analysis goals.""",
+                    state
                 )
                 notebook_cells.append(transform_cell)
             
@@ -71,7 +74,8 @@ Choose appropriate methods based on the data and analysis goals."""
 4. Generate interaction terms if relevant
 5. Select most relevant features
 
-Focus on features that might help answer the user's questions."""
+Focus on features that might help answer the user's questions.""",
+                    state
                 )
                 notebook_cells.append(feature_cell)
             
@@ -84,7 +88,8 @@ Focus on features that might help answer the user's questions."""
 4. Create visualizations showing the impact of preparation steps
 5. Save the cleaned dataset if appropriate
 
-Summarize what was accomplished in this preparation phase."""
+Summarize what was accomplished in this preparation phase.""",
+                state
             )
             notebook_cells.append(validation_cell)
             
@@ -163,7 +168,7 @@ Summarize what was accomplished in this preparation phase."""
         if any(word in context_lower for word in [
             "explore", "describe", "summarize", "overview", "interesting", "patterns"
         ]) and not any(word in context_lower for word in ["predict", "model"]):
-            return "deployment_preparation"
+            return "analysis_report"
         
         # Default: let coordinator decide
         return "coordinator"

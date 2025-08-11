@@ -9,11 +9,12 @@ from .base import BaseAgent, AgentState
 class ModelingAgent(BaseAgent):
     """Agent responsible for selecting and applying modeling techniques."""
     
-    def __init__(self, llm_provider):
+    def __init__(self, llm_provider, executor=None):
         super().__init__(
             name="Modeling Specialist",
             llm_provider=llm_provider,
-            phase_name="select and apply appropriate modeling techniques"
+            phase_name="select and apply appropriate modeling techniques",
+            executor=executor
         )
     
     def execute(self, state: AgentState) -> Dict[str, Any]:
@@ -45,7 +46,8 @@ class ModelingAgent(BaseAgent):
 
 Problem type: {modeling_strategy['approach']}
 Target: Based on user context about "{state.user_context}"
-"""
+""",
+                state
             )
             notebook_cells.append(setup_cell)
             
@@ -59,7 +61,8 @@ Target: Based on user context about "{state.user_context}"
 4. Calculate relevant performance metrics
 5. Display model results and interpretation
 
-Focus on {modeling_strategy['approach']} performance metrics."""
+Focus on {modeling_strategy['approach']} performance metrics.""",
+                    state
                 )
                 notebook_cells.append(model_cell)
             
@@ -73,7 +76,8 @@ Focus on {modeling_strategy['approach']} performance metrics."""
 4. Explain the trade-offs between different approaches
 5. Select the final recommended model
 
-Compare: {', '.join(modeling_strategy['algorithms'])}"""
+Compare: {', '.join(modeling_strategy['algorithms'])}""",
+                    state
                 )
                 notebook_cells.append(comparison_cell)
             
@@ -86,7 +90,8 @@ Compare: {', '.join(modeling_strategy['algorithms'])}"""
 4. Identify key factors driving predictions
 5. Discuss model limitations and assumptions
 
-Make the model results understandable and actionable."""
+Make the model results understandable and actionable.""",
+                state
             )
             notebook_cells.append(interpretation_cell)
             

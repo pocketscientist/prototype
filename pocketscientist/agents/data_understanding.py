@@ -9,11 +9,12 @@ from .base import BaseAgent, AgentState
 class DataUnderstandingAgent(BaseAgent):
     """Agent responsible for initial data exploration and quality assessment."""
     
-    def __init__(self, llm_provider):
+    def __init__(self, llm_provider, executor=None):
         super().__init__(
             name="Data Understanding Specialist",
             llm_provider=llm_provider,
-            phase_name="explore data structure, quality, and initial patterns"
+            phase_name="explore data structure, quality, and initial patterns",
+            executor=executor
         )
     
     def execute(self, state: AgentState) -> Dict[str, Any]:
@@ -37,7 +38,8 @@ class DataUnderstandingAgent(BaseAgent):
 3. Show the first few rows
 4. Display summary statistics
 
-Handle potential encoding issues and provide informative output."""
+Handle potential encoding issues and provide informative output.""",
+                state
             )
             notebook_cells.append(load_cell)
             
@@ -50,7 +52,8 @@ Handle potential encoding issues and provide informative output."""
 4. Check for inconsistent data types
 5. Analyze categorical variables (unique values, frequency)
 
-Create visualizations where appropriate and summarize findings."""
+Create visualizations where appropriate and summarize findings.""",
+                state
             )
             notebook_cells.append(quality_cell)
             
@@ -63,7 +66,8 @@ Create visualizations where appropriate and summarize findings."""
 4. Generate any other relevant exploratory plots
 5. Save important plots as PNG files
 
-Focus on understanding data patterns and relationships."""
+Focus on understanding data patterns and relationships.""",
+                state
             )
             notebook_cells.append(viz_cell)
             
@@ -76,7 +80,8 @@ Focus on understanding data patterns and relationships."""
 4. Suggest areas for further investigation
 5. Create a summary report of findings
 
-Print clear, actionable insights."""
+Print clear, actionable insights.""",
+                state
             )
             notebook_cells.append(insights_cell)
             

@@ -9,11 +9,12 @@ from .base import BaseAgent, AgentState
 class DeploymentPreparationAgent(BaseAgent):
     """Agent responsible for preparing final recommendations and actionable insights."""
     
-    def __init__(self, llm_provider):
+    def __init__(self, llm_provider, executor=None):
         super().__init__(
             name="Deployment Preparation Specialist",
             llm_provider=llm_provider,
-            phase_name="prepare final recommendations and actionable insights"
+            phase_name="prepare final recommendations and actionable insights",
+            executor=executor
         )
     
     def execute(self, state: AgentState) -> Dict[str, Any]:
@@ -38,7 +39,8 @@ class DeploymentPreparationAgent(BaseAgent):
 4. Quantify the impact or significance of findings
 5. Create executive-level visualizations
 
-Focus on clear, non-technical language that stakeholders can understand."""
+Focus on clear, non-technical language that stakeholders can understand.""",
+                state
             )
             notebook_cells.append(summary_cell)
             
@@ -81,7 +83,8 @@ Focus on clear, non-technical language that stakeholders can understand."""
 4. Generate a data dictionary or documentation
 5. Create a final summary report
 
-Prepare all materials needed for stakeholders."""
+Prepare all materials needed for stakeholders.""",
+                state
             )
             notebook_cells.append(export_cell)
             

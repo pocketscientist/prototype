@@ -9,11 +9,12 @@ from .base import BaseAgent, AgentState
 class EvaluationAgent(BaseAgent):
     """Agent responsible for evaluating model performance and validating results."""
     
-    def __init__(self, llm_provider):
+    def __init__(self, llm_provider, executor=None):
         super().__init__(
             name="Model Evaluation Specialist",
             llm_provider=llm_provider,
-            phase_name="evaluate model performance and validate results"
+            phase_name="evaluate model performance and validate results",
+            executor=executor
         )
     
     def execute(self, state: AgentState) -> Dict[str, Any]:
@@ -38,7 +39,8 @@ class EvaluationAgent(BaseAgent):
 4. Test for overfitting or underfitting
 5. Analyze residuals or prediction errors
 
-Provide clear interpretation of what these metrics mean for the business problem."""
+Provide clear interpretation of what these metrics mean for the business problem.""",
+                state
             )
             notebook_cells.append(performance_cell)
             
@@ -51,7 +53,8 @@ Provide clear interpretation of what these metrics mean for the business problem
 4. Test model robustness with different data subsets
 5. Validate that the model answers the original business question
 
-Ensure the model is reliable and trustworthy."""
+Ensure the model is reliable and trustworthy.""",
+                state
             )
             notebook_cells.append(validation_cell)
             
@@ -65,7 +68,8 @@ Ensure the model is reliable and trustworthy."""
 5. Provide recommendations for model deployment
 
 Consider the original user question: "{state.user_context}"
-"""
+""",
+                state
             )
             notebook_cells.append(impact_cell)
             
@@ -78,7 +82,8 @@ Consider the original user question: "{state.user_context}"
 4. Prepare model summary and key insights
 5. Create final model evaluation report
 
-Balance performance, interpretability, and business requirements."""
+Balance performance, interpretability, and business requirements.""",
+                state
             )
             notebook_cells.append(selection_cell)
             
@@ -94,7 +99,7 @@ Balance performance, interpretability, and business requirements."""
                 "success": True,
                 "findings": findings,
                 "notebook_cells": notebook_cells,
-                "next_phase": "deployment_preparation",
+                "next_phase": "analysis_report",
                 "message": "Model evaluation completed - ready for deployment preparation",
                 "requires_iteration": False
             }
@@ -104,7 +109,7 @@ Balance performance, interpretability, and business requirements."""
                 "success": False,
                 "findings": {"error": str(e)},
                 "notebook_cells": [],
-                "next_phase": "deployment_preparation",  # Continue anyway
+                "next_phase": "analysis_report",  # Continue anyway
                 "message": f"Evaluation failed: {str(e)}",
                 "requires_iteration": False
             }

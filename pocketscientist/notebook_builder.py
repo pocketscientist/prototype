@@ -155,7 +155,38 @@ class NotebookBuilder:
             # Add outputs if provided
             outputs = cell_data.get("outputs", [])
             if outputs:
-                cell.outputs = outputs
+                # Convert dict outputs to proper nbformat output objects
+                formatted_outputs = []
+                for output in outputs:
+                    if isinstance(output, dict):
+                        # Convert dict to proper nbformat output
+                        if output.get("output_type") == "stream":
+                            from nbformat.v4 import new_output
+                            formatted_outputs.append(new_output(
+                                output_type="stream",
+                                name=output.get("name", "stdout"),
+                                text=output.get("text", [])
+                            ))
+                        elif output.get("output_type") == "error":
+                            from nbformat.v4 import new_output
+                            formatted_outputs.append(new_output(
+                                output_type="error",
+                                ename=output.get("ename", "Error"),
+                                evalue=output.get("evalue", ""),
+                                traceback=output.get("traceback", [])
+                            ))
+                        elif output.get("output_type") == "display_data":
+                            from nbformat.v4 import new_output
+                            formatted_outputs.append(new_output(
+                                output_type="display_data",
+                                data=output.get("data", {}),
+                                metadata=output.get("metadata", {})
+                            ))
+                        else:
+                            formatted_outputs.append(output)
+                    else:
+                        formatted_outputs.append(output)
+                cell.outputs = formatted_outputs
                 
             # Add execution count if provided
             execution_count = cell_data.get("execution_count")

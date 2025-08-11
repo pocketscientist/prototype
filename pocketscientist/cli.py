@@ -82,8 +82,11 @@ def main(
         # Import here to avoid circular imports and improve startup time
         from pocketscientist.orchestrator import DataScienceOrchestrator
         
+        # Make dataset path absolute for validation
+        absolute_dataset_path = str(Path(dataset).resolve())
+        
         orchestrator = DataScienceOrchestrator(
-            dataset_path=dataset,
+            dataset_path=absolute_dataset_path,
             context=context,
             output_dir=run_output_dir,
             max_time=max_time,

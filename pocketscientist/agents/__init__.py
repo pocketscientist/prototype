@@ -9,6 +9,7 @@ from .data_preparation import DataPreparationAgent
 from .modeling import ModelingAgent
 from .evaluation import EvaluationAgent
 from .deployment_preparation import DeploymentPreparationAgent
+from .analysis_report import AnalysisReportAgent
 from .coordinator import CoordinatorAgent
 
 __all__ = [
@@ -19,5 +20,6 @@ __all__ = [
     "ModelingAgent",
     "EvaluationAgent",
     "DeploymentPreparationAgent",
+    "AnalysisReportAgent",
     "CoordinatorAgent"
 ]

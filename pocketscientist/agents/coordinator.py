@@ -56,7 +56,7 @@ CRISP-DM Phases:
 3. data_preparation - Data cleaning, transformation, feature engineering
 4. modeling - Select and apply modeling techniques
 5. evaluation - Evaluate model performance and validate results
-6. deployment_preparation - Prepare final recommendations and insights
+6. analysis_report - Create comprehensive analysis report and summary
 
 Decision Criteria:
 - Have we understood the business objective clearly?
@@ -75,7 +75,7 @@ Respond with a JSON object containing:
     "priority": "high/medium/low"
 }}
 
-If we've completed enough analysis or are running out of time, recommend "deployment_preparation" as the final phase.
+If we've completed enough analysis or are running out of time, recommend "analysis_report" as the final phase.
 """
         
         try:
@@ -96,11 +96,11 @@ If we've completed enough analysis or are running out of time, recommend "deploy
                 "data_preparation", 
                 "modeling", 
                 "evaluation", 
-                "deployment_preparation"
+                "analysis_report"
             ]
             
             if decision["next_phase"] not in valid_phases:
-                decision["next_phase"] = "deployment_preparation"
+                decision["next_phase"] = "analysis_report"
             
             return decision
             
@@ -166,19 +166,19 @@ If we've completed enough analysis or are running out of time, recommend "deploy
             }
         else:
             return {
-                "next_phase": "deployment_preparation",
+                "next_phase": "analysis_report",
                 "reasoning": "Ready for final recommendations",
                 "requires_iteration": False,
                 "priority": "high"
             }
     
     def _prepare_final_phase(self, state: AgentState) -> Dict[str, Any]:
-        """Prepare for the final deployment preparation phase."""
+        """Prepare for the final analysis report phase."""
         return {
             "success": True,
             "findings": {"coordinator_decision": "Final phase due to time/iteration limits"},
             "notebook_cells": [],
-            "next_phase": "deployment_preparation",
+            "next_phase": "analysis_report",
             "message": f"Moving to final phase - Time remaining: {state.time_remaining:.0f}s, Iterations: {state.iteration_count}/{state.max_iterations}",
             "requires_iteration": False
         }

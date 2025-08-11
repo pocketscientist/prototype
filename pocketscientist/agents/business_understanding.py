@@ -9,11 +9,12 @@ from .base import BaseAgent, AgentState
 class BusinessUnderstandingAgent(BaseAgent):
     """Agent responsible for understanding business objectives and requirements."""
     
-    def __init__(self, llm_provider):
+    def __init__(self, llm_provider, executor=None):
         super().__init__(
             name="Business Understanding Specialist", 
             llm_provider=llm_provider,
-            phase_name="define business objectives and project requirements"
+            phase_name="define business objectives and project requirements",
+            executor=executor
         )
     
     def execute(self, state: AgentState) -> Dict[str, Any]:
@@ -49,7 +50,8 @@ class BusinessUnderstandingAgent(BaseAgent):
             setup_cell = self._generate_code_cell(
                 "Generate Python code to set up the data science environment. "
                 "Include necessary imports for pandas, numpy, matplotlib, seaborn, sklearn, etc. "
-                "Set up plotting parameters and any other common setup code."
+                "Set up plotting parameters and any other common setup code.",
+                state
             )
             notebook_cells.append(setup_cell)
             

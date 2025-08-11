@@ -15,6 +15,7 @@ from .agents import (
     ModelingAgent,
     EvaluationAgent,
     DeploymentPreparationAgent,
+    AnalysisReportAgent,
     CoordinatorAgent
 )
 from .agents.base import AgentState
@@ -22,6 +23,7 @@ from .notebook_builder import NotebookBuilder
 from .report_generator import ReportGenerator
 from .utils.safety import SafetyMonitor
 from .utils.validation import validate_dataset
+from .execution import CellExecutor
 
 
 class DataScienceOrchestrator:
@@ -51,14 +53,18 @@ class DataScienceOrchestrator:
             api_key=api_key
         )
         
+        # Initialize code executor
+        self.executor = CellExecutor(working_dir=output_dir)
+        
         # Initialize agents
         self.agents = {
-            "business_understanding": BusinessUnderstandingAgent(self.llm_provider),
-            "data_understanding": DataUnderstandingAgent(self.llm_provider),
-            "data_preparation": DataPreparationAgent(self.llm_provider),
-            "modeling": ModelingAgent(self.llm_provider),
-            "evaluation": EvaluationAgent(self.llm_provider),
-            "deployment_preparation": DeploymentPreparationAgent(self.llm_provider),
+            "business_understanding": BusinessUnderstandingAgent(self.llm_provider, self.executor),
+            "data_understanding": DataUnderstandingAgent(self.llm_provider, self.executor),
+            "data_preparation": DataPreparationAgent(self.llm_provider, self.executor),
+            "modeling": ModelingAgent(self.llm_provider, self.executor),
+            "evaluation": EvaluationAgent(self.llm_provider, self.executor),
+            "deployment_preparation": DeploymentPreparationAgent(self.llm_provider, self.executor),
+            "analysis_report": AnalysisReportAgent(self.llm_provider, self.executor),
             "coordinator": CoordinatorAgent(self.llm_provider)
         }
         
@@ -99,6 +105,7 @@ class DataScienceOrchestrator:
             if dataset_validation["warnings"] and self.verbose:
                 for warning in dataset_validation["warnings"]:
                     print(f"⚠️ Dataset warning: {warning}")
+            
             
             # Validate LLM connection
             if not self._validate_llm_connection():
@@ -273,7 +280,7 @@ class DataScienceOrchestrator:
             "data_preparation",
             "modeling",
             "evaluation",
-            "deployment_preparation"
+            "analysis_report"
         ]
         
         try:
@@ -283,7 +290,7 @@ class DataScienceOrchestrator:
         except ValueError:
             pass
         
-        return "deployment_preparation"  # Always end with this
+        return "analysis_report"  # Always end with this
     
     def _build_notebook(self) -> str:
         """Build the final Jupyter notebook."""
