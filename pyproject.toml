@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "pocketscientist"
 version = "0.1.0"
 description = "AI agent orchestration for data science following CRISP-DM methodologies"
-authors = [{name = "PocketScientist Team", email = "team@pocketscientist.com"}]
-license = {text = "MIT"}
+authors = [{name = "PocketScientist Team", email = "#"}]
+license = {text = "Apache-2.0"}
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [

@@ -32,8 +32,8 @@ class DataUnderstandingAgent(BaseAgent):
             
             # Data loading and basic info
             load_cell = self._generate_code_cell(
-                f"""Generate code to:
-1. Load the dataset from '{state.dataset_path}' using pandas
+                """Generate code to:
+1. Load the dataset using pandas (use 'dataset_path' variable if available, or the provided path)
 2. Display basic information about the dataset (shape, dtypes, info)
 3. Show the first few rows
 4. Display summary statistics
@@ -64,7 +64,7 @@ Create visualizations where appropriate and summarize findings.""",
 2. Create bar plots for categorical variables (top categories)
 3. Create a correlation matrix heatmap if applicable
 4. Generate any other relevant exploratory plots
-5. Save important plots as PNG files
+5. Save important plots as PNG files in the 'plots/' subdirectory (e.g., plt.savefig('plots/correlation_matrix.png'))
 
 Focus on understanding data patterns and relationships.""",
                 state

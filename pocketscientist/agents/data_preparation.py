@@ -86,7 +86,8 @@ Focus on features that might help answer the user's questions.""",
 2. Verify no unexpected issues were introduced
 3. Compare key statistics before and after preparation
 4. Create visualizations showing the impact of preparation steps
-5. Save the cleaned dataset if appropriate
+5. Save the cleaned dataset to 'outputs/' subdirectory (e.g., df_cleaned.to_csv('outputs/cleaned_data.csv'))
+6. Save any summary statistics to 'outputs/' subdirectory
 
 Summarize what was accomplished in this preparation phase.""",
                 state

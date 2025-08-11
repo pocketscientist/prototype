@@ -1,5 +1,8 @@
 # PocketScientist
 
+> **🏆 OpenAI Open Model Hackathon 2025 Entry**  
+> This project is being developed for the [OpenAI Open Model Hackathon](https://openai.devpost.com/) using gpt-oss models. Following the hackathon, it will be released as open source under the Apache 2.0 license.
+
 **AI-Powered Data Science Agent Orchestration following CRISP-DM Methodology**
 
 PocketScientist is an innovative AI agent orchestration system that emulates the work of a data scientist by following the industry-standard CRISP-DM (Cross Industry Standard Process for Data Mining) methodology. It automatically iterates through data science processes, creating comprehensive analyses with minimal human intervention.
@@ -209,7 +212,7 @@ We welcome contributions! Please see our contributing guidelines for:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project will be released under the Apache 2.0 License following the OpenAI Open Model Hackathon.
 
 ## 🙏 Acknowledgments
 

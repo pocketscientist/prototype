@@ -379,10 +379,56 @@ Return only the Python code, no markdown formatting or explanation.
             if code.startswith("```"):
                 lines = code.split('\n')
                 code = '\n'.join(lines[1:-1] if lines[-1] == "```" else lines[1:])
+            
+            # Inject output directory setup at the beginning of code if it contains file operations
+            code = self._setup_output_directories(code, state)
+            
             return code
         except Exception as e:
             # Fallback code
             return f"# Error generating code: {str(e)}\nprint('Code generation failed')"
+    
+    def _setup_output_directories(self, code: str, state: Optional[AgentState] = None) -> str:
+        """Setup output directories and ensure proper file paths."""
+        
+        # Check if code contains file output operations or dataset loading
+        file_operations = [
+            'savefig', 'to_csv', 'to_excel', 'to_json', 'to_parquet', 
+            'to_pickle', 'write_html', 'write_image', '.png', '.jpg', 
+            '.html', '.csv', '.xlsx', '.json'
+        ]
+        
+        has_file_ops = any(op in code for op in file_operations)
+        has_dataset_load = 'pd.read_csv' in code or 'read_csv' in code
+        
+        if not (has_file_ops or has_dataset_load):
+            return code
+        
+        # Inject directory setup code at the beginning
+        setup_code = """
+# Setup output directories and dataset path
+import os
+import pathlib
+
+# Create subdirectories for different types of outputs
+os.makedirs('plots', exist_ok=True)
+os.makedirs('outputs', exist_ok=True) 
+os.makedirs('data', exist_ok=True)
+
+"""
+        
+        # Add dataset path if needed
+        if has_dataset_load and state and state.dataset_path:
+            # Convert to absolute path to ensure it's accessible from any working directory
+            from pathlib import Path
+            abs_dataset_path = str(Path(state.dataset_path).absolute())
+            setup_code += f"""
+# Dataset path (absolute path to ensure accessibility)
+dataset_path = r"{abs_dataset_path}"
+
+"""
+        
+        return setup_code + code
     
     def _create_cell_dict(
         self,
