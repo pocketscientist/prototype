@@ -17,6 +17,10 @@ PocketScientist is an innovative AI agent orchestration system that emulates the
 - **LLM Agnostic**: Generic interface supporting multiple LLM providers (Ollama by default)
 - **Automated Insights**: AI agents generate code, analysis, and recommendations automatically
 
+## ⚠️ Security Notice
+
+**Important**: PocketScientist executes AI-generated code directly on your local machine without sandboxing. Only run this tool on trusted datasets and review generated notebooks before executing them in production environments.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -87,6 +91,14 @@ PocketScientist implements all six phases of CRISP-DM:
 - **Safety Monitoring**: Prevents infinite loops with time limits and iteration caps
 - **Error Recovery**: Graceful handling of failures with fallback strategies
 
+### Code Execution System
+
+- **Local Python Execution**: Executes generated code directly on your machine (not sandboxed)
+- **Persistent Namespace**: Maintains variables and state across code cells and phases
+- **Automatic Visualization**: Captures and saves matplotlib/seaborn/plotly plots
+- **Error Analysis**: Analyzes execution failures and automatically retries with corrected code
+- **Working Directory**: Changes to and operates in the specified output directory
+
 ## 📊 Supported Analysis Types
 
 - **Descriptive Analytics**: Data exploration and pattern discovery
@@ -109,18 +121,14 @@ PocketScientist implements all six phases of CRISP-DM:
 
 ### Environment Variables
 
-- `POCKETSCIENTIST_API_KEY`: Default API key for LLM provider
+- `POCKETSCIENTIST_API_KEY`: API key for LLM provider (only supported environment variable)
 
 ## 🔧 LLM Provider Support
 
 Currently supported:
 - **Ollama** (default) - Local LLM deployment
-- Extensible architecture for additional providers
 
-Coming soon:
-- OpenAI GPT models
-- Anthropic Claude models
-- Other API-compatible providers
+Note: The system is designed specifically for Ollama. Other providers are not currently implemented.
 
 ## 📈 Example Analysis Flow
 
@@ -138,42 +146,48 @@ Output: Complete notebook + HTML report with findings
 
 ## 🧪 Testing
 
-Run the comprehensive test suite:
+Run the integration test suite:
 
 ```bash
-python test_run.py
+python test_run.py          # System integration tests
+python test_execution.py    # Code execution engine tests
 ```
 
 Tests cover:
-- Module imports and dependencies
-- Dataset validation
-- Notebook generation
-- Report creation
-- Core functionality
+- Module imports and basic functionality
+- Dataset validation and loading
+- Code execution engine
+- Core integration testing
+
+Note: Current testing focuses on integration rather than comprehensive unit testing.
 
 ## 🏗️ Architecture
 
 ```
 pocketscientist/
 ├── agents/                 # CRISP-DM phase agents
+│   ├── base.py            # Base agent class
 │   ├── business_understanding.py
 │   ├── data_understanding.py
 │   ├── data_preparation.py
 │   ├── modeling.py
 │   ├── evaluation.py
 │   ├── deployment_preparation.py
-│   └── coordinator.py      # Workflow coordination
-├── llm/                    # LLM provider interface
-│   ├── base.py            # Abstract provider
-│   ├── ollama.py          # Ollama implementation
-│   └── factory.py         # Provider factory
-├── utils/                  # Utilities and safety
-│   ├── safety.py          # Loop prevention
-│   └── validation.py      # Data validation
-├── orchestrator.py         # Main workflow engine
-├── notebook_builder.py     # Jupyter notebook generation
-├── report_generator.py     # HTML report creation
-└── cli.py                 # Command line interface
+│   ├── analysis_report.py # Final analysis report agent
+│   └── coordinator.py     # Workflow coordination
+├── llm/                   # LLM provider interface
+│   ├── base.py           # Abstract provider
+│   ├── ollama.py         # Ollama implementation
+│   └── factory.py        # Provider factory
+├── execution/             # Code execution system
+│   └── cell_executor.py  # Python code execution engine
+├── utils/                 # Utilities and safety
+│   ├── safety.py         # Loop prevention
+│   └── validation.py     # Data validation
+├── orchestrator.py        # Main workflow engine
+├── notebook_builder.py    # Jupyter notebook generation
+├── report_generator.py    # HTML report creation
+└── cli.py                # Command line interface (Click-based)
 ```
 
 ## 🔒 Safety Features
@@ -217,7 +231,8 @@ This project will be released under the Apache 2.0 License following the OpenAI 
 ## 🙏 Acknowledgments
 
 - Built with the CRISP-DM methodology
-- Powered by LangChain and LangGraph
+- Uses Click for command-line interface
+- Jupyter ecosystem for notebook generation
 - Inspired by the data science community's need for automated analysis tools
 
 ---
